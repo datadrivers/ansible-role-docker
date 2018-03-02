@@ -1,4 +1,4 @@
-# Ansible role docker
+# Ansible role docker  [![Build Status](https://travis-ci.org/datadrivers/ansible-role-docker.png?branch=master)](https://travis-ci.org/datadrivers/ansible-role-docker)
 
 This role installs and configures Docker, ctop, docker-compose, and Nvidia supported GPU-Docker (with Nvidia drivers and Nvidia CUDA). To manage the installation of all components, check the default values of the role variables.
 
