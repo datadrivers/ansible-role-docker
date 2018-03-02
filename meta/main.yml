@@ -1,8 +1,9 @@
 galaxy_info:
   author: Markus Rekkenbeil (Datadrivers GmbH)
   description: An Ansible role for installing Docker, ctop, docker-compose and nvidia-docker.
-  company: Datadrivers GmbH (Hamburg, Germany) - www.datadrivers.de
-  license: license (GNU GPL-3)
+  company: Datadrivers GmbH (Hamburg, Germany)
+  website:  http://www.datadrivers.de
+  license: GPLv3
   issue_tracker_url: https://github.com/datadrivers/ansible-role-docker/issues
   github_branch: master
   min_ansible_version: 2.1
@@ -13,19 +14,14 @@ galaxy_info:
   galaxy_tags:
     - ctop
     - datadrivers
-    - datadrivers_docker
     - development
     - docker
-    - docker-aws
-    - docker-ce
-    - docker-compose
-    - docker-ctop
-    - docker-ecs
-    - docker-gpu
-    - docker-systemd
-    - docker-universe
+    - dockercompose
+    - dockergpu
+    - gpu
+    - systemd
     - environment
-    - machine-learning
-    - nvidia-docker
+    - machinelearning
+    - nvidiadocker
 
 dependencies: []
