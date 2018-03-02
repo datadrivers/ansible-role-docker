@@ -1,0 +1,42 @@
+---
+# Subtasks docker_systemd.yml
+- name: "Ensure the systemd docker.service.d directory exists"
+  file:
+    path: '/etc/systemd/system/docker.service.d'
+    owner: 'root'
+    group: 'root'
+    state: directory
+    mode: '0755'
+  when: ansible_os_family == "RedHat" and docker_http_proxy_active
+  notify:
+    - systemctl-daemon-reload-docker
+    - docker-service-restart
+
+- name: Copy the http-proxy.conf template file for docker and systemd
+  template:
+    src: http-proxy.conf.j2
+    dest: '/etc/systemd/system/docker.service.d/http-proxy.conf'
+  notify:
+    - systemctl-daemon-reload-docker
+    - docker-service-restart
+  when: ansible_os_family == "RedHat" and docker_http_proxy_active
+
+- name: Copy the https-proxy.conf template file for docker and systemd
+  template:
+    src: https-proxy.conf.j2
+    dest: '/etc/systemd/system/docker.service.d/https-proxy.conf'
+  notify:
+    - systemctl-daemon-reload-docker
+    - docker-service-restart
+  when: ansible_os_family == "RedHat" and docker_http_proxy_active
+
+- name: Copy the no-proxy.conf template file for docker and systemd
+  template:
+    src: no-proxy.conf.j2
+    dest: '/etc/systemd/system/docker.service.d/no-proxy.conf'
+  notify:
+    - systemctl-daemon-reload-docker
+    - docker-service-restart
+  when: ansible_os_family == "RedHat" and docker_http_proxy_active
+
+- meta: flush_handlers

@@ -1,0 +1,20 @@
+---
+# Subtasks docker_compose.yml
+
+- name: Find latest release version of docker-compose from {{ docker_compose_github_release_url }}
+  shell: curl -k -L -s {{ docker_compose_github_release_url }} | grep browser_download_url | grep 'docker-compose-Linux-x86_64' | head -n 1 | cut -d '"' -f 4
+  register: docker_compose_latest_release_download_url
+  args:
+    warn: no
+  changed_when: false
+  when: ansible_os_family == 'RedHat'
+
+- name: Download latest release version of docker-compose
+  get_url:
+    url: "{{ docker_compose_latest_release_download_url.stdout }}"
+    dest: "{{ docker_compose_destination_path }}/docker-compose"
+    validate_certs: "{{ docker_compose_ssl_verify }}"
+    mode: '0555'
+    owner: 'root'
+    group: 'root'
+  when: ansible_os_family == 'RedHat' and docker_compose_latest_release_download_url is defined

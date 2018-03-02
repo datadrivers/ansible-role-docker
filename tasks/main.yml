@@ -1,0 +1,69 @@
+---
+# Role docker
+
+- name: Include docker repo configuration tasks
+  include_tasks: docker_prepare.yml
+  when: ansible_os_family == 'RedHat'
+  become: yes
+  tags:
+    - docker-repo
+
+- name: Include nvidia-docker related configuration tasks
+  include_tasks: docker_prepare_nvidia.yml
+  when: docker_install_nvidia_docker and ansible_os_family == 'RedHat'
+  become: yes
+  tags:
+    - docker-repo
+    - docker-nvidia-repo
+
+- name: Include docker normal installation tasks
+  include_tasks: docker_install.yml
+  when: not docker_install_nvidia_docker and ansible_os_family == 'RedHat'
+  become: yes
+  tags:
+    - docker
+
+- name: Include nvidia-docker installation tasks
+  include_tasks: docker_nvidia_install.yml
+  when: docker_install_nvidia_docker and ansible_os_family == 'RedHat'
+  become: yes
+  tags:
+    - nvidia-docker
+    - docker-nvidia
+
+- name: Include docker systemd modification and configuration tasks
+  include_tasks: docker_systemd.yml
+  when: ansible_os_family == 'RedHat'
+  become: yes
+  tags:
+    - docker-systemd
+    - docker-systemd-proxy
+    - docker-systemd-noproxy
+
+- name: "Include (unsecure) group membership apply tasks"
+  include_tasks: user_docker_group.yml
+  when: ansible_os_family == 'RedHat' and docker_group_membership_active
+  become: yes
+  tags:
+    - docker-group-membership
+
+- name: Include docker ctop installation
+  include_tasks: docker_ctop.yml
+  when: ansible_os_family == 'RedHat' and docker_install_ctop
+  become: yes
+  tags:
+    - docker-ctop
+
+- name: Include docker compose installation
+  include_tasks: docker_compose.yml
+  when: ansible_os_family == 'RedHat' and docker_install_docker_compose
+  become: yes
+  tags:
+    - docker-compose
+
+- name: Include docker AWS ECS IAM Iptables policies
+  include_tasks: docker_aws_iptables.yml
+  when: ansible_os_family == 'RedHat' and docker_install_aws_iptables
+  become: yes
+  tags:
+    - docker-aws-iptables

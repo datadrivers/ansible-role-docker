@@ -1,0 +1,41 @@
+---
+- name: yum-clean-metadata-by-docker
+  command: yum clean metadata
+  args:
+    warn: no
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker
+
+- name: yum-makecache-by-docker
+  command: yum makecache fast
+  args:
+    warn: no
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker
+
+- name: systemctl-daemon-reload-docker
+  command: systemctl daemon-reload
+  args:
+    warn: no
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker
+
+- name: docker-service-restart
+  command: systemctl restart docker
+  args:
+    warn: no
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker
+
+- name: docker-iptables-save
+  shell: '/usr/sbin/iptables-save > /etc/sysconfig/iptables'
+  args:
+    warn: no
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker
+    - docker-iptables-save

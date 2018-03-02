@@ -1,0 +1,32 @@
+- name: Add defined docker repository
+  yum_repository:
+    name: "{{ docker_repo_name }}"
+    description: "{{ docker_repo_description }}"
+    file: "{{ docker_repo_file_name }}"
+    baseurl: "{{ docker_repo_base_url }}"
+    gpgkey: "{{ docker_repo_gpg_key }}"
+    gpgcheck: "{{ docker_repo_gpg_check }}"
+    enabled: "{{ docker_repo_enabled }}"
+    sslverify: "{{ docker_repo_ssl_verify }}"
+  notify:
+    - yum-clean-metadata-by-docker
+    - yum-makecache-by-docker
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker
+    - docker-repo
+
+- name: Import rpm_key for docker
+  rpm_key:
+    key: "{{ docker_repo_gpg_key }}"
+    state: present
+    validate_certs: "{{ docker_repo_ssl_verify }}"
+  notify:
+    - yum-clean-metadata-by-docker
+    - yum-makecache-by-docker
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker
+    - docker-repo
+
+- meta: flush_handlers

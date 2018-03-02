@@ -1,0 +1,41 @@
+---
+### Ansible generic variables
+docker_ansible_ssh_user: centos
+### See documentation page https://docs.docker.com/engine/installation/linux/docker-ce/centos/ for latest listed settings
+docker_repo_name: docker-ce
+docker_repo_file_name: docker-ce
+### Define the software channel to use: stable, edge, edge-testing
+docker_software_version: stable
+docker_repo_description: "Docker CE {{ docker_software_version|lower }} repository - $basearch"
+# Please adjust the baseurl and gpgkey url to your Linux OS version
+docker_repo_base_url: "https://download.docker.com/linux/centos/7/$basearch/{{ docker_software_version }}"
+docker_repo_gpg_key: https://download.docker.com/linux/centos/gpg
+docker_repo_gpg_check: '1'
+docker_repo_enabled: '1'
+docker_repo_ssl_verify: 'yes'
+docker_package_name: 'docker-ce'
+docker_install_python_package: yes
+docker_http_proxy_active: false
+### HTTP/HTTPS proxy system
+docker_http_proxy: ''
+docker_https_proxy: ''
+### IP addresses: 169.254.170.2 (AWS ECS) and 169.254.169.254 (AWS IMDS) are included
+docker_no_proxy: 'localhost,127.0.0.1,localaddress,.localdomain.com,169.254.169.254,169.254.170.2,/var/run/docker.sock'
+### Give users docker group membership and permissions to manage docker are dangerous!
+### See https://docs.docker.com/engine/security/security/#docker-daemon-attack-surface for more details.
+docker_group_membership_active: false
+docker_group_membership_users: []
+### Docker ctop
+docker_install_ctop: true
+docker_ctop_github_release_url: https://api.github.com/repos/bcicen/ctop/releases
+docker_ctop_destination_path: /usr/local/bin
+docker_ctop_ssl_verify: 'yes'
+### Docker-compose
+docker_install_docker_compose: true
+docker_compose_github_release_url: https://api.github.com/repos/docker/compose/releases
+docker_compose_destination_path: /usr/local/bin
+docker_compose_ssl_verify: 'yes'
+### Docker AWS Iptables
+docker_install_aws_iptables: true
+# Nvidia-docker
+docker_install_nvidia_docker: false

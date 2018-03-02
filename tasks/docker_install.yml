@@ -1,0 +1,28 @@
+- name: "Install {{ docker_package_name }}"
+  yum:
+    name: "{{ docker_package_name }}"
+    state: installed
+    update_cache: yes
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker
+    - docker-installation
+
+- name: Install docker-python stable version
+  yum:
+    name: docker-python
+    state: installed
+  when: ansible_os_family == "RedHat" and docker_install_python_package
+  tags:
+    - docker
+    - docker-python
+
+- name: Enable and start docker.service in systemd
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker
+    - docker-systemd

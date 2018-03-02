@@ -1,0 +1,20 @@
+---
+# Subtasks docker_ctop.yml
+
+- name: Find latest release version of ctop from {{ docker_ctop_github_release_url }}
+  shell: curl -L -k -s {{ docker_ctop_github_release_url }} | grep browser_download_url | grep 'linux-amd64' | head -n 1 | cut -d '"' -f 4
+  register: docker_ctop_latest_release_download_url
+  args:
+    warn: no
+  changed_when: false
+  when: ansible_os_family == 'RedHat'
+
+- name: Download latest release version of ctop
+  get_url:
+    url: "{{ docker_ctop_latest_release_download_url.stdout }}"
+    dest: "{{ docker_ctop_destination_path }}/ctop"
+    validate_certs: "{{ docker_ctop_ssl_verify }}"
+    mode: '0555'
+    owner: 'root'
+    group: 'root'
+  when: ansible_os_family == 'RedHat' and docker_ctop_latest_release_download_url is defined

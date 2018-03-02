@@ -1,0 +1,12 @@
+# ansible retry files
+*.retry
+# swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+# temporary
+*~
+
+# vagrant subfolder
+.vagrant

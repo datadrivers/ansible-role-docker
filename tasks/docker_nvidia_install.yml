@@ -1,0 +1,68 @@
+- name: "Install nvidia-detect"
+  yum:
+    name: nvidia-detect
+    state: installed
+    update_cache: yes
+  when: ansible_os_family == "RedHat" and docker_install_nvidia_docker
+  tags:
+    - docker-nvidia-detect
+
+- name: "Get the right driver version with nvidia-detect"
+  command: nvidia-detect
+  register: nvidia_drv_pkg
+  failed_when: "'No NVIDIA devices were found.' in nvidia_drv_pkg.stdout"
+  changed_when: false
+  tags:
+    - docker-nvidia-detect
+
+- name: nvidia drivers installed (if nvidia-detect found compatible card)
+  yum:
+    name: "{{ nvidia_drv_pkg.stdout }}"
+    state: installed
+    update_cache: yes
+  when: "'kmod-nvidia' in nvidia_drv_pkg.stdout"
+  tags:
+    - docker-nvidia-detect
+    - docker-nvidia-driver
+
+- name: "Install nvidia-docker2 (and docker-ce as dependency)"
+  yum:
+    name: nvidia-docker2
+    state: installed
+    update_cache: yes
+  when: ansible_os_family == "RedHat" and docker_install_nvidia_docker
+  tags:
+    - nvidia-docker
+    - docker-nvidia
+    - nvidia-docker-installation
+    - docker-nvidia-installation
+
+- name: Install docker-python stable version
+  yum:
+    name: docker-python
+    state: installed
+  when: ansible_os_family == "RedHat" and docker_install_python_package
+  tags:
+    - docker-python
+
+- name: "Copy dockerd daemon.json to enable nvidia container runtime as default runtime (instead of runc)"
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_os_family == "RedHat" and docker_install_nvidia_docker
+  tags:
+    - docker-daemon-json
+    - docker-default-runtime-nvidia
+
+- name: Enable and start docker.service in systemd
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker
+    - docker-systemd

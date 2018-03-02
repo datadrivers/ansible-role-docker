@@ -1,0 +1,98 @@
+- name: Add defined nvidia-docker repository
+  yum_repository:
+    name: nvidia-docker
+    description: nvidia-docker
+    file: nvidia-docker
+    baseurl: https://nvidia.github.io/nvidia-docker/centos7/x86_64
+    gpgkey: https://nvidia.github.io/nvidia-docker/gpgkey
+    gpgcheck: '0'
+    enabled: '1'
+    sslverify: "{{ docker_repo_ssl_verify }}"
+  notify:
+    - yum-clean-metadata-by-docker
+    - yum-makecache-by-docker
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker-nvidia-repo
+
+- name: Add defined nvidia-container-runtime repository
+  yum_repository:
+    name: nvidia-container-runtime
+    description: nvidia-container-runtime
+    file: nvidia-container-runtime
+    baseurl: https://nvidia.github.io/nvidia-container-runtime/centos7/x86_64
+    gpgkey: https://nvidia.github.io/nvidia-container-runtime/gpgkey
+    gpgcheck: '0'
+    enabled: '1'
+    sslverify: "{{ docker_repo_ssl_verify }}"
+  notify:
+    - yum-clean-metadata-by-docker
+    - yum-makecache-by-docker
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker-nvidia-repo
+
+- name: Add defined libnvidia-container repository
+  yum_repository:
+    name: libnvidia-container
+    description: libnvidia-container
+    file: libnvidia-container
+    baseurl: https://nvidia.github.io/libnvidia-container/centos7/x86_64
+    gpgkey: https://nvidia.github.io/libnvidia-container/gpgkey
+    gpgcheck: '0'
+    enabled: '1'
+    sslverify: "{{ docker_repo_ssl_verify }}"
+  notify:
+    - yum-clean-metadata-by-docker
+    - yum-makecache-by-docker
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker-nvidia-repo
+
+- name: Import rpm_keys for nvidia-docker
+  rpm_key:
+    key: "{{ item }}"
+    state: present
+    validate_certs: "{{ docker_repo_ssl_verify }}"
+  with_items:
+    - 'https://nvidia.github.io/nvidia-docker/gpgkey'
+    - 'https://nvidia.github.io/nvidia-container-runtime/gpgkey'
+    - 'https://nvidia.github.io/libnvidia-container/gpgkey'
+  notify:
+    - yum-clean-metadata-by-docker
+    - yum-makecache-by-docker
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker-nvidia-repo
+
+- name: Add defined elrepo.org repository
+  yum_repository:
+    name: elrepo
+    description: elrepo
+    file: elrepo
+    baseurl: 'http://elrepo.org/linux/elrepo/el7/$basearch/'
+    gpgkey: https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+    gpgcheck: '1'
+    enabled: '1'
+    sslverify: "{{ docker_repo_ssl_verify }}"
+  notify:
+    - yum-clean-metadata-by-docker
+    - yum-makecache-by-docker
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker-elrepo-repo
+
+- name: Import rpm_key for elrepo.org
+  rpm_key:
+    key: 'https://www.elrepo.org/RPM-GPG-KEY-elrepo.org'
+    state: present
+    validate_certs: "{{ docker_repo_ssl_verify }}"
+  notify:
+    - yum-clean-metadata-by-docker
+    - yum-makecache-by-docker
+  when: ansible_os_family == "RedHat"
+  tags:
+    - docker-elrepo-repo
+
+
+- meta: flush_handlers

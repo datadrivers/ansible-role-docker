@@ -1,0 +1,31 @@
+---
+# Subtasks docker_aws_iptables.yml
+
+- name: 'Set net.ipv4.conf.all.route_localnet to 1'
+  sysctl:
+    name: 'net.ipv4.conf.all.route_localnet'
+    value: '1'
+    state: present
+    ignoreerrors: yes
+  notify:
+    - docker-iptables-save
+
+# Apply first AWS IAM with docker iptables rule
+- name: "Apply first AWS IAM iptables rule for docker (PREROUTING)"
+  iptables_raw:
+    name: aws_docker_iam_prerouting1
+    table: nat
+    rules: "-A PREROUTING -p tcp -d 169.254.170.2 --dport 80 -j DNAT --to-destination 127.0.0.1:51679"
+  notify:
+    - docker-iptables-save
+
+# Apply second AWS IAM with docker iptables rule
+- name: "Apply second AWS IAM iptables rule for docker (OUTPUT)"
+  iptables_raw:
+    name: aws_docker_iam_output1
+    table: nat
+    rules: "-A OUTPUT -p tcp -d 169.254.170.2 -m tcp --dport 80 -j REDIRECT --to-ports 51679"
+  notify:
+    - docker-iptables-save
+
+- meta: flush_handlers

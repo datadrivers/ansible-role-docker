@@ -1,0 +1,10 @@
+---
+# Subtasks user_docker_group.yml
+- name: Add system group membership docker to defined users
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: yes
+  with_items:
+    - "{{ docker_group_membership_users }}"
+  when: ansible_os_family == 'RedHat'
