@@ -94,7 +94,7 @@ Please check the file `TODO.md` for more details.
 
 ## License
 
-* GNU GPL-3 (check file `LICENSE` for more details)
+* MIT license (check file `LICENSE` for more details)
 
 ## Issue Tracker
 

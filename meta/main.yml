@@ -3,7 +3,7 @@ galaxy_info:
   description: An Ansible role for installing Docker, ctop, docker-compose and nvidia-docker.
   company: Datadrivers GmbH (Hamburg, Germany)
   website:  http://www.datadrivers.de
-  license: GPLv3
+  license: "license (BSD, MIT)"
   issue_tracker_url: https://github.com/datadrivers/ansible-role-docker/issues
   github_branch: master
   min_ansible_version: 2.1
@@ -12,6 +12,7 @@ galaxy_info:
       versions:
       - 7
   galaxy_tags:
+    - centos
     - ctop
     - datadrivers
     - development
@@ -23,5 +24,6 @@ galaxy_info:
     - environment
     - machinelearning
     - nvidiadocker
+    - redhat
 
 dependencies: []
