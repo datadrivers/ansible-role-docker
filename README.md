@@ -34,6 +34,11 @@ After that, runs the ansible-galaxy install task:
 $ ansible-galaxy install -v -r requirements.yml
 ```
 
+Or if you want to install it directly in your ansible project:
+```bash
+$ ansible-galaxy install datadrivers.datadrivers_docker
+```
+
 ## Role Variables
 
 Please check `defaults/main.yml` for additional & exact variables and values, that can be overridden.
